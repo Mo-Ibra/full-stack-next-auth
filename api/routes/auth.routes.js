@@ -14,6 +14,9 @@ const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
 
+const isAuth = require('../middleware/isAuth.middleware.js');
+const isAuthAdmin = require('../middleware/isAdmin.middleware.js');
+
 router.post('/users/register', joiMiddleWare.body(registerSchema), async (req, res) => {
 
     try {
@@ -62,7 +65,7 @@ router.post('/users/login', joiMiddleWare.body(loginSchema), async (req, res) =>
         }
 
         const accessToken = jwt.sign({ id: getUser.id, name: getUser.name, email: getUser.email, isAdmin: getUser.isAdmin }, 'accessSecretKey', {
-            expiresIn: '20s',
+            expiresIn: '60s',
         });
 
         console.log(accessToken);
@@ -88,37 +91,6 @@ router.post('/users/login', joiMiddleWare.body(loginSchema), async (req, res) =>
     } catch (err) {
         res.status(500).json({ error: err });
     }
-});
-
-router.get('/users/profile', async (req, res) => {
-
-    const token = req.cookies.token;
-
-    const decodedUser = jwt.decode(token);
-
-    if (!token) {
-        return res.status(500).json({ error: 'Unauthorization' });
-    }
-
-    const user = await prisma.user.findUnique({
-        where: {
-            id: decodedUser.id,
-        }
-    });
-
-    console.log(user.token);
-    console.log(token);
-
-    if (!user) {
-        return res.status(404).json({ error: 'User not found!' });
-    }
-
-    if (user.token != token) {
-        return res.status(500).json({ error: 'Invalid Token' });
-    }
-
-    res.status(200).json(decodedUser);
-
 });
 
 router.get('/users/logout', async (req, res) => {
@@ -155,6 +127,19 @@ router.get('/users/logout', async (req, res) => {
     res.clearCookie('token');
     res.status(200).json({ message: 'User has been log out.' });
 
+});
+
+/* Testing Middlewares */
+router.get('/users/profile', isAuth, async (req, res) => {
+    res.status(200).json({ name: req.name, email: req.email, isAdmin: req.isAdmin });
+});
+
+router.get('/users/mustauth', isAuth, (req, res) => {
+    res.status(200).json({ message: 'You auth', name: req.name, email: req.email, isAdmin: req.isAdmin });
+});
+
+router.get('/users/mustauthadmin', isAuthAdmin, (req, res) => {
+    res.status(200).json({ message: 'You auth admin', name: req.name, email: req.email, isAdmin: req.isAdmin });
 });
 
 module.exports = router;
