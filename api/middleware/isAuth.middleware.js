@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 
 const { PrismaClient } = require('@prisma/client');
 
+const { TOKEN_SECRET_KEY } = require('../constants/constants');
+
 const prisma = new PrismaClient();
 
 const isAuth = (req, res, next) => {
@@ -14,7 +16,7 @@ const isAuth = (req, res, next) => {
         return res.status(500).json({ error: 'Token is null' });
     }
 
-    jwt.verify(token, 'accessSecretKey', async (err, decode) => {
+    jwt.verify(token, TOKEN_SECRET_KEY, async (err, decode) => {
 
         if (err) {
             return res.status(500).json(err);

@@ -1,3 +1,7 @@
 const PORT = 8000;
 
-module.exports = { PORT };
+const TOKEN_SECRET_KEY = "TOKEN_SECRET_KEY";
+
+const TOKEN_EXPIRES_TIME = '1h';
+
+module.exports = { PORT, TOKEN_SECRET_KEY, TOKEN_EXPIRES_TIME };

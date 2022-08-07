@@ -17,6 +17,8 @@ const jwt = require('jsonwebtoken');
 const isAuth = require('../middleware/isAuth.middleware.js');
 const isAuthAdmin = require('../middleware/isAdmin.middleware.js');
 
+const { TOKEN_SECRET_KEY, TOKEN_EXPIRES_TIME } = require('../constants/constants.js');
+
 router.post('/users/register', joiMiddleWare.body(registerSchema), async (req, res) => {
 
     try {
@@ -64,8 +66,8 @@ router.post('/users/login', joiMiddleWare.body(loginSchema), async (req, res) =>
             return res.status(404).json({ error: 'Password is invalid' });
         }
 
-        const accessToken = jwt.sign({ id: getUser.id, name: getUser.name, email: getUser.email, isAdmin: getUser.isAdmin }, 'accessSecretKey', {
-            expiresIn: '60s',
+        const accessToken = jwt.sign({ id: getUser.id, name: getUser.name, email: getUser.email, isAdmin: getUser.isAdmin }, TOKEN_SECRET_KEY, {
+            expiresIn: TOKEN_EXPIRES_TIME,
         });
 
         console.log(accessToken);
