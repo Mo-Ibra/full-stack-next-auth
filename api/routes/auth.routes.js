@@ -88,7 +88,7 @@ router.post('/users/login', joiMiddleWare.body(loginSchema), async (req, res) =>
             maxAge: 24 * 60 * 60 * 1000, // 1 day
         });
 
-        res.status(200).json({ user: updateUser, token: accessToken });
+        res.status(200).json({ message: 'User has been logined successfuly', user: updateUser, token: accessToken });
 
     } catch (err) {
         res.status(500).json({ error: err });

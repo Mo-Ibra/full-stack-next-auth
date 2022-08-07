@@ -8,9 +8,7 @@ const prisma = new PrismaClient();
 
 const isAuth = (req, res, next) => {
 
-    const authHeader = req.headers['authorization'];
-
-    const token = authHeader;
+    const token = req.headers.authorization.split(' ')[1];
 
     if (token == null) {
         return res.status(500).json({ error: 'Token is null' });
