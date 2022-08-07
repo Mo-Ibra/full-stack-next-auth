@@ -2,18 +2,25 @@ import { profileAPI } from '../services/authServices';
 
 import cookie from 'cookie';
 
-const Profile = ({ user }) => {
+import Link from 'next/link';
+
+const Profile = ({ data }) => {
+
+    if (data.name === 'JsonWebTokenError') {
+        return <h1>Login From <Link href="/login"><a>Here</a></Link></h1>
+    }
+
     return (
         <div>
             Hello In Profile!
             <div>
-                <p>Your name is {user.name}</p>
+                <p>Your name is {data.name}</p>
             </div>
             <div>
-                <p>Your email is {user.email}</p>
+                <p>Your email is {data.email}</p>
             </div>
             <div>
-                <p>You {user.isAdmin ? "Are" : "Are not"} Admin</p>
+                <p>You {data.isAdmin ? "Are" : "Are not"} Admin</p>
             </div>
         </div>
     )
@@ -29,7 +36,7 @@ export async function getServerSideProps(context) {
 
     return {
         props: {
-            user: data,
+            data: data,
         }
     }
 }
