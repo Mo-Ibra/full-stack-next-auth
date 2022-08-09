@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { login, profileAPI } from '../services/authServices';
 
-import Cookies from 'universal-cookie';
-
 import cookie from 'cookie';
 
 import Router from 'next/router';
@@ -20,7 +18,7 @@ const Login = ({ data }) => {
 
     const [password, setPassword] = useState('');
 
-    const cookies = new Cookies();
+    // const cookies = new Cookies();
 
     const loginHandler = (e) => {
         
@@ -32,9 +30,11 @@ const Login = ({ data }) => {
             
             loginUser.then(data => {
 
-                cookies.set('token', data.token, {
-                    expires: new Date(Date.now() + 2592000),
-                });
+                // cookies.set('token', data.token, {
+                //     expires: new Date(Date.now() + 2592000),
+                // });
+
+                console.log(data);
 
                 if (data.status == 200) {
                     Router.push('/profile');
@@ -72,4 +72,4 @@ export async function getServerSideProps(context) {
             data,
         }
     }
-}
+};

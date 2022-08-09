@@ -10,7 +10,7 @@ const { PORT } = require('./constants/constants.js');
 const cookieParser = require('cookie-parser');
 
 /** Middleware */
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true, }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.json());

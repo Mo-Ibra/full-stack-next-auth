@@ -70,8 +70,6 @@ router.post('/users/login', joiMiddleWare.body(loginSchema), async (req, res) =>
             expiresIn: TOKEN_EXPIRES_TIME,
         });
 
-        console.log(accessToken);
-
         // Update user.
         const updateUser = await prisma.user.update({
             where: {

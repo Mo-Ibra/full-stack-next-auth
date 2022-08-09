@@ -2,27 +2,23 @@ import Link from 'next/link';
 import { logout, profileAPI } from '../services/authServices';
 import cookie from 'cookie';
 
-import Cookies from 'universal-cookie';
-
 import Router from 'next/router';
 
-const cookies = new Cookies();
+const Home = ({ data, token }) => {
 
-const Home = ({ data }) => {
-
-  const token = cookies.get('token');
-  
   const logoutHandler = () => {
 
-    const userAPI = logout(token);
+    const logoutAPI = logout(token);
 
-    userAPI.then(data => {
+    console.log(token);
+
+    logoutAPI.then(data => {
       if (data.status === 200) {
-        cookies.remove('token');
+        console.log('Removed');
         Router.push('/');
       }
-    });    
-    // console.log(userAPI);
+    });
+    // console.log(logoutAPI);
   }
 
   return (
@@ -52,14 +48,16 @@ const Home = ({ data }) => {
 export default Home;
 
 export async function getServerSideProps(context) {
-  
-  const parsedToken = cookie.parse(context.req.headers.cookie).token;
+
+  const token = cookie.parse(context.req.headers.cookie).token
+
+  const parsedToken = token;
 
   const data = await profileAPI(parsedToken);
-
-  return {
-    props: {
-      data,
+    return {
+      props: {
+        data,
+        token: token ? token : null,
+      }
     }
-  }
 }
