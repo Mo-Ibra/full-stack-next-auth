@@ -22,26 +22,33 @@ const Home = ({ data, token }) => {
   }
 
   return (
-    <div>
-      <div className="flex justify-between">
-        <h3>Auth App</h3>
-        {
-          data.status === 200 ? (
-            <div>
-              <button onClick={logoutHandler}>Logout!</button>
-            </div>
-          ) : (
-            <div>
-              <Link
-                href="/login"
-              >
-                <button>Login</button>
-              </Link>
-            </div>
-          )
-        }
+    <>
+      <div className='shadow-md py-5'>
+        <div className='container mx-auto px-10'>
+          <div className="flex justify-between items-center bg-white border-slate-200">
+            <h3 className='text-blue-500 font-bold text-2xl'>Auth App</h3>
+            {
+              data.status === 200 ? (
+                <div>
+                  <button onClick={logoutHandler}>Logout!</button>
+                </div>
+              ) : (
+                <div>
+                  <Link
+                    href="/login"
+                  >
+                    <button className='bg-blue-500 text-white font-semibold py-1 px-5 rounded-md'>Login</button>
+                  </Link>
+                </div>
+              )
+            }
+          </div>
+        </div>
       </div>
-    </div>
+      <div className='container mx-auto px-10 text-center'>
+        <h2 className='my-20 text-4xl font-bold text-blue-500 underline'>Welcome In Auth App!</h2>
+      </div>
+    </>
   )
 }
 
@@ -54,10 +61,10 @@ export async function getServerSideProps(context) {
   const parsedToken = token;
 
   const data = await profileAPI(parsedToken);
-    return {
-      props: {
-        data,
-        token: token ? token : null,
-      }
+  return {
+    props: {
+      data,
+      token: token ? token : null,
     }
+  }
 }
