@@ -36,10 +36,10 @@ router.post('/users/register', joiMiddleWare.body(registerSchema), async (req, r
             }
         });
 
-        res.status(201).json({ message: 'User has been created', user: createUser });
+        res.status(201).json({ status: 201, message: 'User has been created', user: createUser });
 
     } catch (err) {
-        res.status(500).json({ error: err });
+        res.status(500).json({ status: 500, error: err });
     }
 
 });
@@ -88,7 +88,7 @@ router.post('/users/login', joiMiddleWare.body(loginSchema), async (req, res) =>
             maxAge: 24 * 60 * 60 * 1000, // 1 day
         });
 
-        res.status(200).json({ message: 'User has been logined successfuly', user: updateUser, token: accessToken });
+        res.status(200).json({ status: 200, message: 'User has been logined successfuly', user: updateUser, token: accessToken });
 
     } catch (err) {
         res.status(500).json({ error: err });
@@ -133,7 +133,7 @@ router.get('/users/logout', async (req, res) => {
 
 /* Testing Middlewares */
 router.get('/users/profile', isAuth, async (req, res) => {
-    res.status(200).json({ name: req.name, email: req.email, isAdmin: req.isAdmin });
+    res.status(200).json({ status: 200, name: req.name, email: req.email, isAdmin: req.isAdmin });
 });
 
 router.get('/users/mustauth', isAuth, (req, res) => {

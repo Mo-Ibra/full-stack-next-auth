@@ -1,7 +1,15 @@
-import { useState } from 'react';
-import { register } from '../services/authServices';
+import { useEffect, useState } from 'react';
+import { profileAPI, register } from '../services/authServices';
+import Router from 'next/router';
+import cookie from 'cookie';
 
-const Register = () => {
+const Register = ({ data }) => {
+
+    useEffect(() => {
+        if (data.status === 200) {
+            Router.push('/profile');
+        }
+    });
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -12,16 +20,15 @@ const Register = () => {
         e.preventDefault();
 
         try {
-
             const newUser = register({ name, email, password });
-            
-            console.log(newUser);
             newUser.then(data => {
                 console.log(data.message);
+                if (data.status === 201) {
+                    Router.push('/login');
+                }
             }).catch(err => {
                 console.log(err);
             });
-
         } catch (err) {
             console.log(err);
         }
@@ -41,3 +48,13 @@ const Register = () => {
 }
 
 export default Register;
+
+export async function getServerSideProps(context) {
+    const parsedToken = cookie.parse(context.req.headers.cookie).token;
+    const data = await profileAPI(parsedToken);
+    return {
+        props: {
+            data,
+        }
+    }
+}

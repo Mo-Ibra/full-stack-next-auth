@@ -1,10 +1,23 @@
-import { useState } from 'react'
-import { login } from '../services/authServices';
+import { useEffect, useState } from 'react';
+
+import { login, profileAPI } from '../services/authServices';
+
 import Cookies from 'universal-cookie';
 
-const Login = () => {
+import cookie from 'cookie';
+
+import Router from 'next/router';
+
+const Login = ({ data }) => {
+
+    useEffect(() => {
+        if (data.status === 200) {
+            Router.push('/profile');
+        }
+    }, []);
 
     const [email, setEmail] = useState('');
+
     const [password, setPassword] = useState('');
 
     const cookies = new Cookies();
@@ -18,12 +31,15 @@ const Login = () => {
             const loginUser = login({ email: email, password: password });
             
             loginUser.then(data => {
-                console.log(data);
-                console.log(data.message);
+
                 cookies.set('token', data.token, {
                     expires: new Date(Date.now() + 2592000),
                 });
-                console.log(cookies.get('token'));
+
+                if (data.status == 200) {
+                    Router.push('/profile');
+                }
+
             }).catch(err => console.log(err));
 
         } catch (err) {
@@ -45,3 +61,15 @@ const Login = () => {
 
 export default Login;
 
+export async function getServerSideProps(context) {
+    
+    const parsedToken = cookie.parse(context.req.headers.cookie).token;
+
+    const data = await profileAPI(parsedToken);
+
+    return {
+        props: {
+            data,
+        }
+    }
+}
