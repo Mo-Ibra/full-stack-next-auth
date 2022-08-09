@@ -91,35 +91,17 @@ router.post('/users/login', joiMiddleWare.body(loginSchema), async (req, res) =>
         res.status(200).json({ status: 200, message: 'User has been logined successfuly', user: updateUser, token: accessToken });
 
     } catch (err) {
-        res.status(500).json({ error: err });
+        res.status(500).json({ status: 500, error: err });
     }
 });
 
-router.get('/users/logout', async (req, res) => {
+router.get('/users/logout', isAuth, async (req, res) => {
 
-    const token = req.cookies.token;
-
-    if (!token) {
-        return res.status(500).json({ error: 'You already out.' })
-    }
-
-    const { id } = jwt.decode(token);
-
-    if (!token) return res.status(500);
-
-    const user = await prisma.user.findUnique({
-        where: {
-            id: id,
-        }
-    });
-
-    if (!user) {
-        return res.status(500);
-    };
+    const email = req.email;
 
     await prisma.user.update({
         where: {
-            id: id,
+            email: email,
         },
         data: {
             token: null,
@@ -127,8 +109,7 @@ router.get('/users/logout', async (req, res) => {
     });
 
     res.clearCookie('token');
-    res.status(200).json({ message: 'User has been log out.' });
-
+    res.status(200).json({ status: 200, message: 'User has been log out.' });
 });
 
 /* Testing Middlewares */
@@ -137,11 +118,11 @@ router.get('/users/profile', isAuth, async (req, res) => {
 });
 
 router.get('/users/mustauth', isAuth, (req, res) => {
-    res.status(200).json({ message: 'You auth', name: req.name, email: req.email, isAdmin: req.isAdmin });
+    res.status(200).json({ status: 200, message: 'You auth', name: req.name, email: req.email, isAdmin: req.isAdmin });
 });
 
 router.get('/users/mustauthadmin', isAuthAdmin, (req, res) => {
-    res.status(200).json({ message: 'You auth admin', name: req.name, email: req.email, isAdmin: req.isAdmin });
+    res.status(200).json({ status: 200, message: 'You auth admin', name: req.name, email: req.email, isAdmin: req.isAdmin });
 });
 
 module.exports = router;

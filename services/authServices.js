@@ -23,8 +23,13 @@ export async function register({ name, email, password }) {
 }
 
 /** Logout API */
-export async function logout() {
-    const response = await fetch(`${URL}/users/logout`);
+export async function logout(token) {
+    const response = await fetch(`${URL}/users/logout`, {
+        headers: {
+            // "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    });
     const data = await response.json();
     return data;
 }
