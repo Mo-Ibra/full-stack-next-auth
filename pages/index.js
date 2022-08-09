@@ -30,7 +30,7 @@ const Home = ({ data, token }) => {
             {
               data.status === 200 ? (
                 <div>
-                  <button onClick={logoutHandler}>Logout!</button>
+                  <button className='border border-red-500 text-red-500 hover:bg-red-500 hover:text-white duration-300 font-semibold py-1 px-5 rounded-md' onClick={logoutHandler}>Logout!</button>
                 </div>
               ) : (
                 <div>
