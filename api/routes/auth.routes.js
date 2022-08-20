@@ -15,7 +15,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const isAuth = require('../middleware/isAuth.middleware.js');
-const isAuthAdmin = require('../middleware/isAdmin.middleware.js');
+const isAdmin = require('../middleware/isAdmin.middleware.js');
 
 const { TOKEN_SECRET_KEY, TOKEN_EXPIRES_TIME } = require('../constants/constants.js');
 
@@ -119,7 +119,7 @@ router.get('/users/mustauth', isAuth, (req, res) => {
     res.status(200).json({ status: 200, message: 'You auth', name: req.name, email: req.email, isAdmin: req.isAdmin });
 });
 
-router.get('/users/mustauthadmin', isAuthAdmin, (req, res) => {
+router.get('/users/mustauthadmin', isAdmin, (req, res) => {
     res.status(200).json({ status: 200, message: 'You auth admin', name: req.name, email: req.email, isAdmin: req.isAdmin });
 });
 

@@ -6,7 +6,7 @@ const { TOKEN_SECRET_KEY } = require('../constants/constants');
 
 const prisma = new PrismaClient();
 
-const isAuth = (req, res, next) => {
+const isAdmin = (req, res, next) => {
 
     const token = req.headers.authorization.split(' ')[1];
 
@@ -46,4 +46,4 @@ const isAuth = (req, res, next) => {
     });
 }
 
-module.exports = isAuth;
+module.exports = isAdmin;
